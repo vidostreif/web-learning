@@ -1,0 +1,4 @@
+[
+  { "order": "1", "description": "Перекрасте текст в красный цвет", "answer": { "color": "red" } },
+  { "order": "2", "description": "Перекрасте текст в зеленый цвет", "answer": { "color": "green" } }
+]
