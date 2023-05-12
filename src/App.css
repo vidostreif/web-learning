@@ -51,3 +51,15 @@ body {
   flex-grow: 1;
   background-color: cadetblue;
 }
+
+.player {
+  display: flex;
+  flex-grow: 1;
+  background-color: cadetblue;
+  /* justify-content: flex-end; */
+}
+
+.character {
+  width: auto;
+  height: 100px;
+}

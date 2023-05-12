@@ -1,6 +1,7 @@
-import { getValue } from '@testing-library/user-event/dist/utils'
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import imgCharacter from '../img/character.png'
+import { forEachChild } from 'typescript'
 
 type newStyleType = {
   [key: string]: string
@@ -37,7 +38,18 @@ function CssTask() {
   const onChangeCssText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCssText(e.target.value)
 
+    // убираем лишние пробелы и разбиваем стиль на свойство и значение
     let array = e.target.value.split(' ').join('').split(':')
+
+    // свойство стиля пределываем под стандарт реакта
+    let propArray = array[0].split('-')
+    let propString = propArray[0]
+    for (let index = 1; index < propArray.length; index++) {
+      propString += propArray[index][0].toUpperCase() + propArray[index].slice(1)
+    }
+    array[0] = propString
+
+    //преобразуем в стиль React.CSSProperties
     let newStyle: newStyleType = {}
     if (array.length === 2) {
       if (array[1].slice(-1) === ';') {
@@ -48,7 +60,7 @@ function CssTask() {
     }
   }
 
-  console.log(taskNumber)
+  console.log(styleOfTask)
 
   if (!data) {
     return <>Загрузка...</>
@@ -77,10 +89,10 @@ function CssTask() {
           <div>&#125;</div>
         </div>
       </div>
-      <div className="player">
-        <h2>Визуальное отображение</h2>
+      <div className="player" style={styleOfTask}>
+        {/* <h2>Визуальное отображение</h2> */}
 
-        <div style={styleOfTask}>тектст теста</div>
+        <img src={imgCharacter} alt="character" className="character" />
       </div>
     </>
   )
