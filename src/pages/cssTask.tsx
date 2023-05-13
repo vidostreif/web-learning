@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import imgCharacter from '../img/character.png'
-import { forEachChild } from 'typescript'
 
 type newStyleType = {
   [key: string]: string
 }
 
+type answerType = {
+  [key: string]: {
+    value: string
+    chek: boolean
+  }
+}
+
 interface dataType {
   order: number
   description: string
-  answer: React.CSSProperties
+  answer: { [key: string]: string }
 }
 
 function CssTask() {
   let [cssText, setCssText] = useState<string>('')
   let [styleOfTask, setStyleOfTask] = useState<React.CSSProperties>({})
   let [data, setData] = useState<dataType[]>()
+  let [win, setWin] = useState<boolean>(false)
   let [taskNumber, setTaskNumber] = useState<number>()
   let url = useLocation()
 
@@ -38,29 +45,62 @@ function CssTask() {
   const onChangeCssText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCssText(e.target.value)
 
-    // убираем лишние пробелы и разбиваем стиль на свойство и значение
-    let array = e.target.value.split(' ').join('').split(':')
+    // убираем лишние пробелы и разбиваем на объявления стилей
+    let stylesArray = e.target.value.split(' ').join('').split(';')
+    const newStyles: newStyleType = {}
 
-    // свойство стиля пределываем под стандарт реакта
-    let propArray = array[0].split('-')
-    let propString = propArray[0]
-    for (let index = 1; index < propArray.length; index++) {
-      propString += propArray[index][0].toUpperCase() + propArray[index].slice(1)
-    }
-    array[0] = propString
-
-    //преобразуем в стиль React.CSSProperties
-    let newStyle: newStyleType = {}
-    if (array.length === 2) {
-      if (array[1].slice(-1) === ';') {
-        array[1] = array[1].slice(0, -1)
+    // копируем ответ в новый объект для последующей проверки
+    let answer: answerType = {}
+    if (data && taskNumber && data[taskNumber - 1].answer) {
+      for (const [key, value] of Object.entries(data[taskNumber - 1].answer)) {
+        answer[key] = { value, chek: false }
       }
-      newStyle[array[0]] = array[1]
-      setStyleOfTask(newStyle)
     }
-  }
 
-  console.log(styleOfTask)
+    stylesArray.forEach(function (item, index, array) {
+      //разбиваем стиль на свойство и значение
+      let [property, value] = item.split(':')
+
+      // ищем пару свойство и значение в ответе
+      if (property in answer) {
+        if (answer[property].value.toLowerCase() === value.toLowerCase()) {
+          answer[property].chek = true
+        }
+      }
+
+      // свойство стиля пределываем под стандарт реакта
+      let propArray = property.split('-')
+      let propString = propArray[0]
+      for (let index = 1; index < propArray.length; index++) {
+        if (propArray[index].length > 0) {
+          propString += propArray[index][0].toUpperCase() + propArray[index].slice(1)
+        }
+      }
+      property = propString
+
+      //преобразуем в стиль React.CSSProperties
+      if (property && value) {
+        if (value.slice(-1) === ';') {
+          value = value.slice(0, -1)
+        }
+        newStyles[property] = value
+      }
+    })
+
+    // проверяем все ли свойства из правильного ответа ввел пользователь
+    let pass = true
+    if (Object.keys(answer).length !== 0) {
+      for (const key in answer) {
+        if (!answer[key].chek) {
+          pass = false
+        }
+      }
+    }
+
+    console.log(pass)
+    console.log(newStyles)
+    setStyleOfTask(newStyles)
+  }
 
   if (!data) {
     return <>Загрузка...</>
