@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import imgCharacter from '../img/character.png'
+import parse from 'html-react-parser'
 
 type newStyleType = {
   [key: string]: string
@@ -120,7 +121,7 @@ function CssTask() {
         <div className="task__description">
           <h1>{url.pathname}</h1>
           <h2>Задание {data[taskNumber - 1].order}</h2>
-          <p>{data[taskNumber - 1].description}</p>
+          <p>{parse(data[taskNumber - 1].description)}</p>
         </div>
         <div className="task__editor">
           <h2>Редактор</h2>

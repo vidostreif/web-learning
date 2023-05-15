@@ -16,6 +16,10 @@ body {
   box-sizing: border-box;
 }
 
+code {
+  color: red;
+}
+
 .App {
   text-align: center;
   height: 100vh;
@@ -33,7 +37,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  flex-grow: 1;
+  width: 50%;
 }
 
 .task__description {
@@ -48,15 +52,10 @@ body {
 }
 
 .player {
-  flex-grow: 1;
-  background-color: cadetblue;
-}
-
-.player {
   display: flex;
-  flex-grow: 1;
   background-color: cadetblue;
   justify-content: center;
+  width: 50%;
 }
 
 .character {
