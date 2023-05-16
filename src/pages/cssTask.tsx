@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import imgCharacter from '../img/character.png'
 import parse from 'html-react-parser'
+import CssEditor from '../components/cssEditor/CssEditor'
 
 type newStyleType = {
   [key: string]: string
@@ -124,10 +125,7 @@ function CssTask() {
           <p>{parse(data[taskNumber - 1].description)}</p>
         </div>
         <div className="task__editor">
-          <h2>Редактор</h2>
-          <div>.text &#123;</div>
-          <input value={cssText} onChange={onChangeCssText} />
-          <div>&#125;</div>
+          <CssEditor inputValue={cssText} onChange={onChangeCssText} />
         </div>
       </div>
       <div className="player" style={styleOfTask}>
