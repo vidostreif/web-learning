@@ -2,7 +2,7 @@
   {
     "order": "1",
     "description": "<p id=\"instructions\"><p>Добро пожаловать в Flexbox Froggy. Игра, в которой тебе нужно помочь лягушонку Фроги и его друзьям, напиконтейнер CSS код! Направь этого лягушонка на лилию справа, используя свойство <code class=\"help\">justify-content</code>, которое выравнивает элементы горизонтально и принимает следующие значения:</p><ul><li><code>flex-start</code>: элементы выравниваются по левой стороне контейнера.</li><li><code>flex-end</code>: элементы выравниваются по правой стороне контейнера.</li><li><code>center</code>: элементы выравниваются по центру контейнера.</li><li><code>space-between</code>: элементы отображаются с одинаковыми отступами между ними.</li><li><code>space-around</code>: элементы отображаются с одинаковыми отступами вокруг них.</li></ul><p>Например, <code>justify-content: flex-end;</code> сдвинет лягушонка вправо.</p></p>",
-    "answer": { "color": "red" }
+    "answer": { "justify-content": "flex-end" }
   },
   { "order": "2", "description": "Перекрасьте текст в зеленый цвет", "answer": { "color": "green" } },
   { "order": "3", "description": "Перетащите персонажа в права", "answer": { "justify-content": "flex-end" } }
