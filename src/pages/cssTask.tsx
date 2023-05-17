@@ -120,7 +120,6 @@ function CssTask() {
     <>
       <div className="task">
         <div className="task__description">
-          <h1>{url.pathname}</h1>
           <h2>Задание {data[taskNumber - 1].order}</h2>
           <p>{parse(data[taskNumber - 1].description)}</p>
         </div>

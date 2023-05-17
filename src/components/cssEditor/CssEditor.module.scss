@@ -1,6 +1,26 @@
 .container {
+  display: flex;
   width: 100%;
   border: 1px solid #008b8b;
-  border-radius: 5px;
+  border-radius: 10px;
+}
+
+.numberLine {
+  background-color: beige;
   padding: 5px;
+  border-radius: 10px 0 0 10px;
+}
+
+.field {
+  background-color: azure;
+  padding: 5px;
+  border-radius: 0 10px 10px 0;
+  width: 100%;
+  &__parameter {
+    padding-left: 17px;
+  }
+  &__input {
+    border-radius: 2px;
+    border-style: none;
+  }
 }

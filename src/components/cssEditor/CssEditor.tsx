@@ -4,12 +4,35 @@ import styles from './CssEditor.module.scss'
 type Props = { inputValue: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }
 
 function CssEditor({ inputValue, onChange }: Props) {
+  let lineNumbering
+  for (let index = 1; index < 10; index++) {
+    lineNumbering = (
+      <>
+        {lineNumbering}
+        <div>{index}</div>
+      </>
+    )
+  }
+
   return (
     <div className={styles.container}>
-      {/* <h2>Редактор</h2> */}
-      <div>.person &#123;</div>
-      <input value={inputValue} onChange={onChange} />
-      <div>&#125;</div>
+      <div className={styles.numberLine}>{lineNumbering}</div>
+      <div className={styles.field}>
+        <div>
+          <code>.field &#123;</code>
+        </div>
+
+        <div className={styles.field__parameter}>
+          <code> display: flex;</code>
+        </div>
+        <div className={styles.field__parameter}>
+          <input className={styles.field__input} value={inputValue} onChange={onChange} placeholder="Пиши здесь..." />
+        </div>
+
+        <div>
+          <code>&#125;</code>
+        </div>
+      </div>
     </div>
   )
 }

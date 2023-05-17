@@ -17,7 +17,7 @@ body {
 }
 
 code {
-  color: red;
+  color: deeppink;
 }
 
 .App {
@@ -46,6 +46,7 @@ code {
 }
 
 .task__editor {
+  padding: 5px;
   text-align: left;
   flex-grow: 1;
   background-color: bisque;
