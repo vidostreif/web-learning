@@ -23,7 +23,8 @@ interface dataType {
 
 function CssTask() {
   let [cssText, setCssText] = useState<string>('')
-  let [styleOfTask, setStyleOfTask] = useState<React.CSSProperties>({})
+  let [styleOfPlayingField, setStyleOfPlayingField] = useState<React.CSSProperties>({})
+  let [styleOfBackground, setStyleOfBackground] = useState<React.CSSProperties>({})
   let [data, setData] = useState<dataType[]>()
   let [win, setWin] = useState<boolean>(false)
   let [taskNumber, setTaskNumber] = useState<number>()
@@ -38,20 +39,37 @@ function CssTask() {
   }, [url])
 
   useEffect(() => {
+    //определяем стиль ответа
+    let answer: newStyleType = {}
+    if (data && taskNumber && data[taskNumber - 1].answer) {
+      for (const [key, value] of Object.entries(data[taskNumber - 1].answer)) {
+        answer[cssToReactStyle(key)] = value
+      }
+      setStyleOfBackground(answer)
+    }
+  }, [data, taskNumber])
+
+  useEffect(() => {
     fetch('../data.json')
       .then((response) => response.json())
       .then((json) => setData(json))
   }, [])
 
-  // Проверяем введенные данные пользователя
-  const onChangeCssText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCssText(e.target.value)
+  // конвертируем свойство CSS в стандарт реакта
+  function cssToReactStyle(property: string) {
+    let propArray = property.split('-')
+    let propString = propArray[0]
+    for (let index = 1; index < propArray.length; index++) {
+      if (propArray[index].length > 0) {
+        propString += propArray[index][0].toUpperCase() + propArray[index].slice(1)
+      }
+    }
+    return propString
+  }
 
-    // убираем лишние пробелы и разбиваем на объявления стилей
-    let stylesArray = e.target.value.split(' ').join('').split(';')
-    const newStyles: newStyleType = {}
-
-    // копируем ответ в новый объект для последующей проверки
+  // проверяем введеный ответ
+  function checkAnswer(stylesArray: string[]) {
+    // копируем правильный ответ в новый объект для последующей проверки
     let answer: answerType = {}
     if (data && taskNumber && data[taskNumber - 1].answer) {
       for (const [key, value] of Object.entries(data[taskNumber - 1].answer)) {
@@ -62,30 +80,11 @@ function CssTask() {
     stylesArray.forEach(function (item, index, array) {
       //разбиваем стиль на свойство и значение
       let [property, value] = item.split(':')
-
       // ищем пару свойство и значение в ответе
       if (property in answer) {
         if (answer[property].value.toLowerCase() === value.toLowerCase()) {
           answer[property].chek = true
         }
-      }
-
-      // свойство стиля пределываем под стандарт реакта
-      let propArray = property.split('-')
-      let propString = propArray[0]
-      for (let index = 1; index < propArray.length; index++) {
-        if (propArray[index].length > 0) {
-          propString += propArray[index][0].toUpperCase() + propArray[index].slice(1)
-        }
-      }
-      property = propString
-
-      //преобразуем в стиль React.CSSProperties
-      if (property && value) {
-        if (value.slice(-1) === ';') {
-          value = value.slice(0, -1)
-        }
-        newStyles[property] = value
       }
     })
 
@@ -98,10 +97,41 @@ function CssTask() {
         }
       }
     }
+    return pass
+  }
 
-    console.log(pass)
-    console.log(newStyles)
-    setStyleOfTask(newStyles)
+  // конвертируем массив строк в React.CSSProperties
+  function conversionStringArrayToReactCSSProperties(stylesArray: string[]) {
+    const newStyles: newStyleType = {}
+
+    stylesArray.forEach(function (item, index, array) {
+      //разбиваем стиль на свойство и значение
+      let [property, value] = item.split(':')
+
+      property = cssToReactStyle(property)
+
+      //преобразуем в стиль React.CSSProperties
+      if (property && value) {
+        if (value.slice(-1) === ';') {
+          value = value.slice(0, -1)
+        }
+        newStyles[property] = value
+      }
+    })
+    return newStyles
+  }
+
+  const onChangeCssText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCssText(e.target.value)
+
+    setStyleOfPlayingField({})
+    // убираем лишние пробелы и разбиваем на объявления стилей
+    let stylesArray = e.target.value.split(' ').join('').split(';')
+
+    const newStyles = conversionStringArrayToReactCSSProperties(stylesArray)
+    setStyleOfPlayingField(newStyles)
+
+    setWin(checkAnswer(stylesArray))
   }
 
   if (!data) {
@@ -125,12 +155,16 @@ function CssTask() {
         </div>
         <div className="task__editor">
           <CssEditor inputValue={cssText} onChange={onChangeCssText} />
+          {/* <div>{JSON.stringify(data[taskNumber - 1].answer)}</div> */}
         </div>
       </div>
-      <div className="player" style={styleOfTask}>
-        {/* <h2>Визуальное отображение</h2> */}
-
-        <img src={imgCharacter} alt="character" className="character" />
+      <div className="board">
+        <div id="playingField" className="board__playingField" style={styleOfPlayingField}>
+          <img id="rabbit" src={imgCharacter} alt="rabbit" className="rabbit" />
+        </div>
+        <div id="background" className="board__background" style={styleOfBackground}>
+          <img id="carrot" src={imgCharacter} alt="carrot" className="carrot" />
+        </div>
       </div>
     </>
   )
